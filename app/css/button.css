@@ -1,0 +1,559 @@
+@utility btn-solid-root {
+  @apply bg-primary-foreground text-primary enabled:hover:text-primary-foreground active:text-primary rounded-xl px-4 py-2 font-bold enabled:hover:bg-transparent;
+  &:enabled:hover {
+    color: oklch(0.8708 0.087663 61.7983);
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-s-top)),
+      oklch(var(--neu-s-bot) / 0.5)
+    );
+    box-shadow:
+      -2px -2px 4px oklch(var(--neu-s-top)),
+      2px 2px 2px oklch(var(--neu-s-bot));
+    @media (min-width: 1024px) {
+      color: oklch(0.8816 0.0678 0);
+      background: linear-gradient(
+        145deg,
+        oklch(var(--neu-p-top)),
+        oklch(var(--neu-p-bot) / 0.5)
+      );
+      box-shadow:
+        -2px -2px 4px oklch(var(--neu-p-top)),
+        2px 2px 2px oklch(var(--neu-p-bot));
+    }
+  }
+  &:enabled:active {
+    background: oklch(var(--neu-s-top) / 0.2);
+    box-shadow:
+      inset -2px -2px 4px oklch(var(--neu-s-top)),
+      inset 2px 2px 4px oklch(var(--neu-s-bot));
+    @media (min-width: 1024px) {
+      background: oklch(var(--neu-p-top) / 0.2);
+      box-shadow:
+        inset -2px -2px 4px oklch(var(--neu-p-top)),
+        inset 2px 2px 2px oklch(var(--neu-p-bot));
+    }
+  }
+}
+
+@utility btn-solid-base {
+  @apply bg-foreground/20 rounded-lg;
+  @apply enabled:hover:text-base-foreground px-4 py-2 font-bold;
+  &:enabled:hover {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-top)),
+      oklch(var(--neu-base-bot / 0.5))
+    );
+    box-shadow:
+      -2px -2px 4px oklch(var(--neu-base-top)),
+      2px 2px 2px oklch(var(--neu-base-bot));
+  }
+  &:enabled:active {
+    background: oklch(var(--neu-base-top) / 0.2);
+    box-shadow:
+      inset -2px -2px 4px oklch(var(--neu-base-top)),
+      inset 2px 2px 4px oklch(var(--neu-base-bot));
+  }
+}
+
+@utility btn-solid-base-rounder {
+  @apply bg-foreground/20 rounded-xl;
+  @apply enabled:hover:text-base-foreground px-4 py-2 font-bold;
+  &:enabled:hover {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-top)),
+      oklch(var(--neu-base-bot) / 0.5)
+    );
+    box-shadow:
+      -2px -2px 4px oklch(var(--neu-base-top)),
+      2px 2px 2px oklch(var(--neu-base-bot));
+  }
+  &:enabled:active {
+    background: oklch(var(--neu-base-top) / 0.2);
+    box-shadow:
+      inset -2px -2px 4px oklch(var(--neu-base-top)),
+      inset 2px 2px 4px oklch(var(--neu-base-bot));
+  }
+}
+
+@utility btn-solid-p {
+  @apply bg-primary-foreground text-primary rounded-lg;
+  @apply enabled:hover:text-base-foreground px-4 py-2 font-bold;
+  &:enabled:hover {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-top)),
+      oklch(var(--neu-base-bot) / 0.5)
+    );
+    box-shadow:
+      -2px -2px 4px oklch(var(--neu-base-top)),
+      2px 2px 2px oklch(var(--neu-base-bot));
+  }
+  &:enabled:active {
+    background: oklch(var(--neu-base-top) / 0.2);
+    box-shadow:
+      inset -2px -2px 4px oklch(var(--neu-base-top)),
+      inset 2px 2px 4px oklch(var(--neu-base-bot));
+  }
+}
+
+@utility btn-solid-p-rounder {
+  @apply bg-primary-foreground text-primary rounded-xl;
+  @apply enabled:hover:text-base-foreground px-4 py-2 font-bold;
+  &:enabled:hover {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-top)),
+      oklch(var(--neu-base-bot) / 0.5)
+    );
+    box-shadow:
+      -2px -2px 4px oklch(var(--neu-base-top)),
+      2px 2px 2px oklch(var(--neu-base-bot));
+  }
+  &:enabled:active {
+    background: oklch(var(--neu-base-top) / 0.2);
+    box-shadow:
+      inset -2px -2px 4px oklch(var(--neu-base-top)),
+      inset 2px 2px 4px oklch(var(--neu-base-bot));
+  }
+}
+
+@utility btn-solid-s {
+  @apply bg-secondary-foreground text-secondary rounded-lg;
+  @apply enabled:hover:text-base-foreground px-4 py-2 font-bold;
+  &:enabled:hover {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-top)),
+      oklch(var(--neu-base-bot) / 0.5)
+    );
+    box-shadow:
+      -2px -2px 4px oklch(var(--neu-base-top)),
+      2px 2px 2px oklch(var(--neu-base-bot));
+  }
+  &:enabled:active {
+    background: oklch(var(--neu-base-top) / 0.2);
+    box-shadow:
+      inset -2px -2px 4px oklch(var(--neu-base-top)),
+      inset 2px 2px 4px oklch(var(--neu-base-bot));
+  }
+}
+
+@utility btn-solid-destructive {
+  @apply bg-destructive-foreground/70 text-destructive rounded-lg;
+  @apply enabled:hover:text-base-foreground px-4 py-2 font-bold;
+  &:enabled:hover {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-top)),
+      oklch(var(--neu-base-bot) / 0.5)
+    );
+    box-shadow:
+      -2px -2px 4px oklch(var(--neu-base-top)),
+      2px 2px 2px oklch(var(--neu-base-bot));
+  }
+  &:enabled:active {
+    background: oklch(var(--neu-base-top) / 0.2);
+    box-shadow:
+      inset -2px -2px 4px oklch(var(--neu-base-top)),
+      inset 2px 2px 4px oklch(var(--neu-base-bot));
+  }
+}
+
+@utility btn-solid-google {
+  @apply bg-primary-foreground text-primary enabled:hover:text-base-foreground/70 rounded-lg px-4 py-2 font-bold active:text-white;
+}
+
+@utility btn-outline-root {
+  @apply text-secondary-foreground dark:enabled:hover:text-secondary-foreground rounded-lg px-4 py-2 font-bold;
+  box-shadow: inset 0 0 0 3px oklch(var(--secondary-foreground));
+  &:enabled:hover {
+    color: oklch(0.8708 0.087663 61.7983);
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-s-top)),
+      oklch(var(--neu-s-bot) / 0.5)
+    );
+    box-shadow:
+      -2px -2px 4px oklch(var(--neu-s-top)),
+      2px 2px 4px oklch(var(--neu-s-bot));
+  }
+  &:enabled:active {
+    background: oklch(var(--neu-s-top) / 0.2);
+    box-shadow:
+      inset -2px -2px 4px oklch(var(--neu-s-top)),
+      inset 2px 2px 4px oklch(var(--neu-s-bot));
+  }
+}
+
+@utility btn-outline-p {
+  @apply enabled:hover:text-base-foreground/70 rounded-lg px-4 py-2 font-extrabold active:text-white;
+  @apply text-primary-foreground;
+  box-shadow: inset 0 0 0 3px oklch(var(--primary-foreground));
+  &:enabled:hover {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-top)),
+      oklch(var(--neu-base-bot-lighter) / 0.3)
+    );
+    box-shadow:
+      -2px -2px 4px oklch(var(--neu-base-top)),
+      2px 2px 4px oklch(var(--neu-base-bot));
+  }
+  &:enabled:active {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-bot-lightest) / 0.3),
+      oklch(var(--neu-base-top-darker))
+    );
+    box-shadow:
+      inset -4px -4px 4px oklch(var(--neu-base-top)),
+      inset 4px 4px 4px oklch(var(--neu-base-bot));
+  }
+}
+
+@utility btn-outline-s {
+  @apply enabled:hover:text-base-foreground/70 rounded-lg px-4 py-2 font-extrabold active:text-white;
+  @apply text-secondary-foreground;
+  box-shadow: inset 0 0 0 3px oklch(var(--secondary-foreground));
+  &:enabled:hover {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-top)),
+      oklch(var(--neu-base-bot-lighter) / 0.3)
+    );
+    box-shadow:
+      -2px -2px 4px oklch(var(--neu-base-top)),
+      2px 2px 4px oklch(var(--neu-base-bot));
+  }
+  &:enabled:active {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-bot-lightest) / 0.3),
+      oklch(var(--neu-base-top-darker))
+    );
+    box-shadow:
+      inset -4px -4px 4px oklch(var(--neu-base-top)),
+      inset 4px 4px 4px oklch(var(--neu-base-bot));
+  }
+}
+
+@utility btn-outline-base {
+  @apply text-foreground rounded-lg px-4 py-2 font-extrabold;
+  box-shadow: inset 0 0 0 3px oklch(var(--foreground));
+  &:enabled:hover {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-top)),
+      oklch(var(--neu-base-bot-lighter) / 0.3)
+    );
+    box-shadow:
+      -2px -2px 4px oklch(var(--neu-base-top)),
+      2px 2px 4px oklch(var(--neu-base-bot));
+  }
+  &:enabled:active {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-bot-lightest) / 0.3),
+      oklch(var(--neu-base-top-darker))
+    );
+    box-shadow:
+      inset -4px -4px 4px oklch(var(--neu-base-top)),
+      inset 4px 4px 4px oklch(var(--neu-base-bot));
+  }
+}
+
+@utility btn-outline-base-rounder {
+  @apply text-foreground rounded-xl px-4 py-2 font-extrabold;
+  box-shadow: inset 0 0 0 3px oklch(var(--foreground));
+  &:enabled:hover {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-top)),
+      oklch(var(--neu-base-bot-lighter) / 0.3)
+    );
+    box-shadow:
+      -2px -2px 4px oklch(var(--neu-base-top)),
+      2px 2px 4px oklch(var(--neu-base-bot));
+  }
+  &:enabled:active {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-bot-lightest) / 0.3),
+      oklch(var(--neu-base-top-darker))
+    );
+    box-shadow:
+      inset -4px -4px 4px oklch(var(--neu-base-top)),
+      inset 4px 4px 4px oklch(var(--neu-base-bot));
+  }
+}
+
+@utility btn-outline-destructive {
+  @apply rounded-lg;
+  @apply text-destructive-foreground px-4 py-2 font-extrabold;
+  box-shadow: inset 0 0 0 3px oklch(var(--destructive-foreground));
+  &:enabled:hover {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-top)),
+      oklch(var(--neu-base-bot-lighter) / 0.3)
+    );
+    box-shadow:
+      -2px -2px 4px oklch(var(--neu-base-top)),
+      2px 2px 4px oklch(var(--neu-base-bot));
+  }
+  &:enabled:active {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-bot-lightest) / 0.3),
+      oklch(var(--neu-base-top-darker))
+    );
+    box-shadow:
+      inset -4px -4px 4px oklch(var(--neu-base-top)),
+      inset 4px 4px 4px oklch(var(--neu-base-bot));
+  }
+}
+
+@utility btn-outline-destructive-rounder {
+  @apply rounded-xl;
+  @apply text-destructive-foreground px-4 py-2 font-extrabold;
+  box-shadow: inset 0 0 0 3px oklch(var(--destructive-foreground));
+  &:enabled:hover {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-top)),
+      oklch(var(--neu-base-bot-lighter) / 0.3)
+    );
+    box-shadow:
+      -2px -2px 4px oklch(var(--neu-base-top)),
+      2px 2px 4px oklch(var(--neu-base-bot));
+  }
+  &:enabled:active {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-bot-lightest) / 0.3),
+      oklch(var(--neu-base-top-darker))
+    );
+    box-shadow:
+      inset -4px -4px 4px oklch(var(--neu-base-top)),
+      inset 4px 4px 4px oklch(var(--neu-base-bot));
+  }
+}
+
+@utility btn-outline-socials {
+  @apply text-foreground rounded-lg px-4 py-2 font-extrabold;
+  box-shadow: inset 0 0 0 3px oklch(0.9249 0 0);
+  &:enabled:hover {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-top)),
+      oklch(var(--neu-base-bot-lighter) / 0.3)
+    );
+    box-shadow:
+      -2px -2px 4px oklch(var(--neu-base-top)),
+      2px 2px 4px oklch(var(--neu-base-bot));
+  }
+  &:enabled:active {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-bot-lightest) / 0.3),
+      oklch(var(--neu-base-top-darker))
+    );
+    box-shadow:
+      inset -4px -4px 4px oklch(var(--neu-base-top)),
+      inset 4px 4px 4px oklch(var(--neu-base-bot));
+  }
+}
+
+@utility btn-outline-instagram {
+  @apply text-foreground rounded-lg px-3.5 py-[5px] font-extrabold active:border-none active:px-4 active:py-2 enabled:hover:border-none enabled:hover:px-4 enabled:hover:py-2;
+  border: 3px solid transparent;
+  background:
+    linear-gradient(
+        to right,
+        oklch(var(--custom-bg1)),
+        oklch(var(--custom-bg1))
+      )
+      padding-box,
+    linear-gradient(
+        160deg,
+        oklch(0.399 0.145 308.94),
+        oklch(0.5347 0.2083 28.14) oklch(0.6455 0.1161 72.02)
+      )
+      border-box;
+  &:enabled:hover {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-top)),
+      oklch(var(--neu-base-bot-lighter) / 0.3)
+    );
+    box-shadow:
+      -2px -2px 4px oklch(var(--neu-base-top)),
+      2px 2px 4px oklch(var(--neu-base-bot));
+  }
+  &:enabled:active {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-bot-lightest) / 0.3),
+      oklch(var(--neu-base-top-darker))
+    );
+    box-shadow:
+      inset -4px -4px 4px oklch(var(--neu-base-top)),
+      inset 4px 4px 4px oklch(var(--neu-base-bot));
+  }
+}
+
+@utility btn-outline-microsoft {
+  @apply text-foreground rounded-lg px-3.5 py-[5px] font-extrabold active:border-none active:px-4 active:py-2 enabled:hover:border-none enabled:hover:px-4 enabled:hover:py-2;
+  border: 3px solid transparent;
+  background:
+    linear-gradient(
+        to right,
+        oklch(var(--custom-bg1)),
+        oklch(var(--custom-bg1))
+      )
+      padding-box,
+    linear-gradient(169deg, #f35325 15%, transparent 40%) border-box,
+    linear-gradient(190deg, #81bc06 15%, transparent 40%) border-box,
+    linear-gradient(348deg, #ffba08 25%, transparent 40%) border-box,
+    linear-gradient(12deg, #05a6f0 25%, transparent 40%) border-box;
+  &:enabled:hover {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-top)),
+      oklch(var(--neu-base-bot-lighter) / 0.3)
+    );
+    box-shadow:
+      -2px -2px 4px oklch(var(--neu-base-top)),
+      2px 2px 4px oklch(var(--neu-base-bot));
+  }
+  &:enabled:active {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-bot-lightest) / 0.3),
+      oklch(var(--neu-base-top-darker))
+    );
+    box-shadow:
+      inset -4px -4px 4px oklch(var(--neu-base-top)),
+      inset 4px 4px 4px oklch(var(--neu-base-bot));
+  }
+}
+
+@utility btn-outline-facebook {
+  @apply text-foreground rounded-lg px-4 py-2 font-extrabold;
+  box-shadow: inset 0 0 0 3px oklch(0.5891 0.2029 257.86);
+  &:enabled:hover {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-top)),
+      oklch(var(--neu-base-bot-lighter) / 0.3)
+    );
+    box-shadow:
+      -2px -2px 4px oklch(var(--neu-base-top)),
+      2px 2px 4px oklch(var(--neu-base-bot));
+  }
+  &:enabled:active {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-bot-lightest) / 0.3),
+      oklch(var(--neu-base-top-darker))
+    );
+    box-shadow:
+      inset -4px -4px 4px oklch(var(--neu-base-top)),
+      inset 4px 4px 4px oklch(var(--neu-base-bot));
+  }
+}
+
+@utility btn-outline-gitlab {
+  @apply text-foreground rounded-lg px-4 py-2 font-extrabold;
+  box-shadow: inset 0 0 0 3px oklch(0.6112 0.1999 31.96);
+  &:enabled:hover {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-top)),
+      oklch(var(--neu-base-bot-lighter) / 0.3)
+    );
+    box-shadow:
+      -2px -2px 4px oklch(var(--neu-base-top)),
+      2px 2px 4px oklch(var(--neu-base-bot));
+  }
+  &:enabled:active {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-bot-lightest) / 0.3),
+      oklch(var(--neu-base-top-darker))
+    );
+    box-shadow:
+      inset -4px -4px 4px oklch(var(--neu-base-top)),
+      inset 4px 4px 4px oklch(var(--neu-base-bot));
+  }
+}
+
+@utility btn-outline-google {
+  @apply text-foreground rounded-lg px-4 py-2 font-extrabold;
+  box-shadow:
+    inset 0 3px 0 oklch(0.6535 0.234792 34.037 / 80%),
+    inset -3px 0 0 oklch(0.5645 0.1633 253.27 / 80%),
+    inset 0 -3px 0 oklch(0.6731 0.1624 144.21 / 80%),
+    inset 3px 0 0 oklch(0.8442 0.172159 84.9338 / 80%);
+  &:enabled:hover {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-top)),
+      oklch(var(--neu-base-bot-lighter) / 0.3)
+    );
+    box-shadow:
+      -2px -2px 4px oklch(var(--neu-base-top)),
+      2px 2px 4px oklch(var(--neu-base-bot));
+  }
+  &:enabled:active {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-bot-lightest) / 0.3),
+      oklch(var(--neu-base-top-darker))
+    );
+    box-shadow:
+      inset -4px -4px 4px oklch(var(--neu-base-top)),
+      inset 4px 4px 4px oklch(var(--neu-base-bot));
+  }
+}
+
+@utility btn-border-p {
+  @apply bg-primary text-primary-foreground enabled:hover:text-base-foreground/70 rounded-3xl px-4 py-2 font-extrabold;
+  box-shadow: inset 0 0 0 2px oklch(var(--primary-foreground));
+  &:enabled:hover {
+    background: linear-gradient(
+      145deg,
+      oklch(var(--neu-p-top)),
+      oklch(var(--neu-p-bot-lighter))
+    );
+    box-shadow:
+      -2px -2px 4px oklch(var(--neu-p-top)),
+      2px 2px 4px oklch(var(--neu-p-bot));
+  }
+  &:enabled:active {
+    background: oklch(var(--neu-p-bot-lighter));
+    color: oklch(1 0 0);
+    box-shadow:
+      inset -2px -2px 4px oklch(var(--neu-p-top)),
+      inset 2px 2px 4px oklch(var(--neu-p-bot));
+  }
+}
+
+@utility btn-text-destructive {
+  @apply text-destructive-foreground enabled:hover:bg-destructive/50 rounded-lg px-4 py-2 font-extrabold;
+}
+
+@utility btn-text-base {
+  @apply text-foreground enabled:hover:bg-background/50 rounded-lg px-4 py-2 font-extrabold;
+}
+
+@utility btn-s-translucent-b {
+  @apply bg-secondary-foreground/10 text-secondary-foreground/50 enabled:hover:bg-secondary enabled:hover:text-secondary-foreground dark:text-secondary-foreground/30 dark:enabled:hover:bg-secondary dark:enabled:hover:text-secondary-foreground h-9 rounded-3xl px-4 font-bold whitespace-nowrap;
+}
+
+@utility btn-circle-base {
+  @apply gradient-base active:gradient-base-inset;
+}

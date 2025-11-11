@@ -1,0 +1,95 @@
+@utility card-image {
+  border: 6px solid transparent;
+  background: linear-gradient(
+      145deg,
+      oklch(var(--neu-base-top-darker) / 0.5),
+      oklch(var(--neu-base-bot-lighter) / 0.5)
+    )
+    border-box;
+  box-shadow:
+    -4px -4px 4px oklch(var(--neu-base-top)),
+    4px 4px 4px oklch(var(--neu-base-bot));
+  &:active {
+    background: linear-gradient(
+        145deg,
+        oklch(var(--neu-base-bot)),
+        oklch(var(--neu-base-top))
+      )
+      border-box;
+  }
+}
+
+@utility card-stats {
+  background: oklch(var(--foreground) / 0.05);
+  box-shadow: 0 -2px 2px oklch(var(--neu-base-top));
+}
+
+@utility card-socials {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 3px solid transparent;
+  background:
+    linear-gradient(
+        145deg,
+        oklch(var(--neu-base-top-darker) / 0.7),
+        oklch(var(--neu-base-bot-lighter) / 0.3)
+      )
+      padding-box,
+    linear-gradient(
+        145deg,
+        oklch(var(--neu-base-bot-lightest)),
+        oklch(var(--neu-base-top-darkest))
+      )
+      border-box;
+  box-shadow:
+    -3px -3px 4px oklch(var(--neu-base-top)),
+    3px 3px 4px oklch(var(--neu-base-bot));
+  &:hover {
+    background:
+      linear-gradient(
+          145deg,
+          oklch(var(--neu-base-top-darker)),
+          oklch(var(--neu-base-top-darkest))
+        )
+        padding-box,
+      linear-gradient(
+          145deg,
+          oklch(var(--neu-base-top-darkest)),
+          oklch(var(--neu-base-top))
+        )
+        border-box;
+  }
+  &:active {
+    background:
+      linear-gradient(
+          145deg,
+          oklch(var(--neu-base-bot-lightest) / 0.3),
+          oklch(var(--neu-base-top-darkest) / 0.7)
+        )
+        padding-box,
+      linear-gradient(
+          145deg,
+          oklch(var(--neu-base-top)),
+          oklch(var(--neu-base-bot))
+        )
+        border-box;
+  }
+  &::before {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border: 3px solid oklch(var(--background));
+    border-radius: 50px;
+    box-shadow:
+      inset 2px 2px 1px oklch(var(--neu-base-top)),
+      inset -2px -2px 1px oklch(var(--neu-base-bot));
+  }
+  &:active::before {
+    box-shadow:
+      inset 2px 2px 1px oklch(var(--neu-base-bot)),
+      inset -2px -2px 1px oklch(var(--neu-base-top));
+  }
+}
