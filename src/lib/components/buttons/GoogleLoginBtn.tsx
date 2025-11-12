@@ -54,6 +54,7 @@ export default function GoogleLoginBtn() {
     <button
       onMouseUp={handleGoogleLogin}
       className="text-4xl text-primary-foreground hover:brightness-125"
+      type="button"
       disabled={isLoading}
     >
       <GoogleIcon />
