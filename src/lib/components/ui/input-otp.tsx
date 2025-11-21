@@ -17,7 +17,7 @@ function InputOTP({
 			data-slot="input-otp"
 			containerClassName={cn(
 				"flex items-center gap-2 has-disabled:opacity-50",
-				containerClassName,
+				containerClassName
 			)}
 			className={cn("disabled:cursor-not-allowed", className)}
 			{...props}
@@ -38,9 +38,11 @@ function InputOTPGroup({ className, ...props }: React.ComponentProps<"div">) {
 function InputOTPSlot({
 	index,
 	className,
+	caretClassName,
 	...props
 }: React.ComponentProps<"div"> & {
 	index: number;
+	caretClassName?: string;
 }) {
 	const inputOTPContext = React.useContext(OTPInputContext);
 	const { char, hasFakeCaret, isActive } = inputOTPContext?.slots[index] ?? {};
@@ -51,14 +53,19 @@ function InputOTPSlot({
 			data-active={isActive}
 			className={cn(
 				"relative flex h-9 w-9 items-center justify-center border-input border-y border-r text-sm shadow-xs outline-none transition-all first:rounded-l-md first:border-l last:rounded-r-md aria-invalid:border-destructive data-[active=true]:z-10 data-[active=true]:border-ring data-[active=true]:ring-[3px] data-[active=true]:ring-ring/50 data-[active=true]:aria-invalid:border-destructive data-[active=true]:aria-invalid:ring-destructive/20 dark:bg-input/30 dark:data-[active=true]:aria-invalid:ring-destructive/40",
-				className,
+				className
 			)}
 			{...props}
 		>
 			{char}
 			{hasFakeCaret && (
 				<div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-					<div className="h-4 w-px animate-caret-blink bg-foreground duration-1000" />
+					<div
+						className={cn(
+							"h-12 w-px animate-blinking bg-foreground duration-1000",
+							caretClassName
+						)}
+					/>
 				</div>
 			)}
 		</div>
