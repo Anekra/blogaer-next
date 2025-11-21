@@ -23,13 +23,18 @@
 				}
 			},
 			"correctness": {
-        "noInvalidPositionAtImportRule": "warn"
+        "noInvalidPositionAtImportRule": "warn",
+				"noUnusedImports": {
+					"level": "warn",
+					"fix": "safe"
+				}
       }
 		}
 	},
 	"javascript": {
 		"formatter": {
-			"quoteStyle": "double"
+			"quoteStyle": "double",
+			"trailingCommas": "none"
 		}
 	},
 	"assist": {
