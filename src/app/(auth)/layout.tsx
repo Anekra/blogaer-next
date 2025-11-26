@@ -1,9 +1,9 @@
-import React from "react";
+import type React from "react";
 
 export default function AuthLayout({
-  children
+	children
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  return <div className="w-screen">{children}</div>;
+	return <div className="w-screen">{children}</div>;
 }

@@ -1,87 +1,87 @@
-import { AnyObj, Auth } from "..";
-import { DraftWithNoUserDto } from "./DraftDto";
-import { PostDto, PostWithNoUserDto } from "./PostDto";
+import type { AnyObj, Auth } from "..";
+import type { DraftWithNoUserDto } from "./DraftDto";
+import type { PostDto, PostWithNoUserDto } from "./PostDto";
 
 export type EncoreErrDto = {
-  code: string;
-  message: string;
-  details?: string;
-}
+	code: string;
+	message: string;
+	details?: string;
+};
 
 export type AuthDto = {
-  status: string;
-  data: Auth;
-  message: string;
+	status: string;
+	data: Auth;
+	message: string;
 };
 
 export type CommonDto = {
-  status: string;
-  data?: AnyObj;
-  message?: string;
-  error?: string;
+	status: string;
+	data?: AnyObj;
+	message?: string;
+	error?: string;
 };
 
 export type PagedPostDto = {
-  currentPage: number;
-  totalPages: number;
-  totalPosts: number;
-  posts: PostDto[];
+	currentPage: number;
+	totalPages: number;
+	totalPosts: number;
+	posts: PostDto[];
 };
 
 export type PagedPostWithNoUserDto = {
-  currentPage: number;
-  totalPages: number;
-  totalPosts: number;
-  posts: PostWithNoUserDto[];
+	currentPage: number;
+	totalPages: number;
+	totalPosts: number;
+	posts: PostWithNoUserDto[];
 };
 
 export type PagedDraftWithNoUserDto = {
-  currentPage: number;
-  totalPages: number;
-  totalDrafts: number;
-  drafts: DraftWithNoUserDto[];
+	currentPage: number;
+	totalPages: number;
+	totalDrafts: number;
+	drafts: DraftWithNoUserDto[];
 };
 
 export type UserOauthDto = {
-  github: string;
-  google: string;
-  apple: string;
-  gitlab: string;
-  x: string;
-  instagram: string;
-  facebook: string;
-  microsoft: string;
+	github: string;
+	google: string;
+	apple: string;
+	gitlab: string;
+	x: string;
+	instagram: string;
+	facebook: string;
+	microsoft: string;
 };
 
 export type TwoFADto = {
-  twoFAMethod?: string;
-  isTwoFAEnabled?: boolean;
-  isPasskey?: boolean;
-  isAuthApp?: boolean;
+	twoFAMethod?: string;
+	isTwoFAEnabled?: boolean;
+	isPasskey?: boolean;
+	isAuthApp?: boolean;
 };
 
 export type SavedAccountsDto = {
-  username: string;
-  email: string;
-  img: string;
+	username: string;
+	email: string;
+	img: string;
 };
 
 export type UserRequestDto = {
-  request: string;
-  limit: number;
-  status: string;
+	request: string;
+	limit: number;
+	status: string;
 };
 
 export type EmailUsernameRequestDto = {
-  emailRequest: boolean;
-  usernameRequest: boolean;
+	emailRequest: boolean;
+	usernameRequest: boolean;
 };
 
 export type GetSocialsDto = {
-  github: string;
-  instagram: string;
-  x: string;
-  youtube: string;
-  facebook: string;
-  gitlab: string;
+	github: string;
+	instagram: string;
+	x: string;
+	youtube: string;
+	facebook: string;
+	gitlab: string;
 };
