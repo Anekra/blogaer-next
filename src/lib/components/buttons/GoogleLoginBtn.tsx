@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import GoogleIcon from "@/lib/components/icons/GoogleIcon";
 import { useLoading } from "@/lib/contexts/LoadingContext";
 import { newUrl } from "@/lib/utils/helper";
+import { TempValue } from "@/lib/utils/enums";
 
 export default function GoogleLoginBtn() {
   const { isLoading, setLoading } = useLoading();
@@ -12,7 +13,7 @@ export default function GoogleLoginBtn() {
   const redirectUrl = useSearchParams().get("request_url");
   const handleGoogleLogin = async () => {
     const state = crypto.randomUUID();
-    localStorage.setItem("CSRFToken", state);
+    sessionStorage.setItem(TempValue.CSRFTkn, state);
     const searchParams = redirectUrl
       ? [
           { param: "state", value: state },
@@ -25,7 +26,7 @@ export default function GoogleLoginBtn() {
     const resJson = await res.json();
     const params = new URLSearchParams(resJson.url);
     const paramState = params.get("state");
-    const localState = localStorage.getItem("CSRFToken");
+    const localState = sessionStorage.getItem(TempValue.CSRFTkn);
 
     if (res.status === 302 && paramState === localState) {
       router.replace(resJson.url);

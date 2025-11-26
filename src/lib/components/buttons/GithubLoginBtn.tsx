@@ -1,6 +1,7 @@
 "use client";
 import GithubIcon from "@/lib/components/icons/GithubIcon";
 import { useLoading } from "@/lib/contexts/LoadingContext";
+import { TempValue } from "@/lib/utils/enums";
 import { newUrl } from "@/lib/utils/helper";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
@@ -11,7 +12,7 @@ export default function GithubLoginBtn() {
 	const redirectUrl = useSearchParams().get("request_url");
 	const handleGithubLogin = async () => {
 		const state = crypto.randomUUID();
-		localStorage.setItem("CSRFToken", state);
+		sessionStorage.setItem(TempValue.CSRFTkn, state);
 		const searchParams = redirectUrl
 			? [
 					{ param: "state", value: state },
@@ -24,7 +25,7 @@ export default function GithubLoginBtn() {
 		const resJson = await res.json();
 		const params = new URLSearchParams(resJson.url);
 		const paramState = params.get("state");
-		const localState = localStorage.getItem("CSRFToken");
+		const localState = sessionStorage.getItem(TempValue.CSRFTkn);
 
 		if (res.status === 302 && paramState === localState) {
 			router.replace(resJson.url);
