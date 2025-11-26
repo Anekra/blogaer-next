@@ -7,27 +7,29 @@ import type { z } from "zod";
 import setSessionCookie from "./setSessionCookie";
 
 export default async function register(
-	values: z.infer<typeof RegisterFormSchema>,
+	values: z.infer<typeof RegisterFormSchema>
 ) {
 	try {
 		const url: string = `${process.env.API_ROUTE}/auth/register`;
-		const userAgent = (await headers()).get("user-agent");
+		const header = await headers();;
+		const userAgent = header.get("user-agent");
+		const xForwardedFor = header.get("x-forwarded-for");
 		const response = await fetch(url, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 				"User-Agent": `${userAgent}`,
-				Origin: "http://localhost:3000",
+				"X-Forwarded-For": `${xForwardedFor}`,
+				Origin: "http://localhost:3000"
 			},
-			body: JSON.stringify(values),
+			body: JSON.stringify(values)
 		});
 
 		const resJson = await response.json();
-    console.log("register.ts >> resJson:", resJson);
 		if (!response.ok) return resJson as EncoreErrDto;
 
 		const authData = resJson as AuthDto;
-		await setSessionCookie(authData.data);
+		await setSessionCookie(authData.data, true);
 
 		return true;
 	} catch (error) {
