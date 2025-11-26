@@ -14,12 +14,14 @@ export default async function userPatch(
 		const cookie = await cookies();
 		const encryptedSession = cookie.get(`${process.env.SESSION}`)?.value;
 		const csrf = cookie.get(`${process.env.CSRF}`)?.value;
-		if (!encryptedSession || !csrf)
+		if (!encryptedSession || !csrf) {
 			return redirect("/login?redirect=Login required!");
+		}
 
 		const session = jwt.verify(
 			encryptedSession,
-			`${process.env.SESSION_SECRET}`
+			`${process.env.SESSION_SECRET}`,
+			{ ignoreExpiration: true }
 		) as Session & JwtPayload;
 		if (!session) return redirect("/login?redirect=Login required!");
 
@@ -29,7 +31,7 @@ export default async function userPatch(
 			credentials: "include",
 			headers: {
 				"Content-Type": "application/json",
-				"Authorization": `Bearer ${session.clientId}`,
+				Authorization: `Bearer ${session.clientId}`,
 				"User-Agent": `${userAgent}`,
 				"X-CSRF": `${csrf}`,
 				Origin: "http://localhost:3000"
@@ -47,10 +49,11 @@ export default async function userPatch(
 		}
 
 		const patchedData = { ...session, ...objValue, csrf };
-		await setSessionCookie(patchedData, false);
+		await setSessionCookie(patchedData);
 
 		return { message: "User data updated successfully." };
-	} catch (_) {
+	} catch (err) {
+		console.error(err);
 		return { error: "Something went wrong please try again later!" };
 	}
 }
