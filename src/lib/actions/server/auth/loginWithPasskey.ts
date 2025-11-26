@@ -1,35 +1,34 @@
 "use server";
+import setSessionCookie from "@/lib/actions/server/auth/setSessionCookie";
+import type { AuthDto, EncoreErrDto } from "@/lib/types/dto/CommonDto";
 import { headers } from "next/headers";
 
-import setSessionCookie from "@/lib/actions/server/auth/setSessionCookie";
-import { AuthDto } from "@/lib/types/dto/CommonDto";
-
 export default async function loginWithPasskey(
-  emailOrUsername: string,
-  optionId: string
+	emailOrUsername: string,
+	optionId: string
 ) {
-  try {
-    const url = `${process.env.API_ROUTE}/auth/two-fa/webauthn/login`;
-    const userAgent = (await headers()).get("user-agent");
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "User-Agent": `${userAgent}`,
-        Origin: "http://localhost:3000"
-      },
-      body: JSON.stringify({ emailOrUsername, optionId })
-    });
+	try {
+		const url = `${process.env.API_ROUTE}/auth/two-fa/webauthn/login`;
+		const userAgent = (await headers()).get("user-agent");
+		const response = await fetch(url, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"User-Agent": `${userAgent}`,
+				Origin: "http://localhost:3000"
+			},
+			body: JSON.stringify({ emailOrUsername, optionId })
+		});
 
-    const resJson: AuthDto = await response.json();
+		const resJson = await response.json();
+		if (!response.ok) return resJson as EncoreErrDto;
 
-    if (!response.ok) return resJson;
+		const authData = resJson as AuthDto;
+		await setSessionCookie(authData.data, true);
 
-    await setSessionCookie(resJson);
-
-    return true;
-  } catch (error) {
-    console.error("loginWithPasskey.ts ERROR >>>", error);
-    return false;
-  }
+		return true;
+	} catch (error) {
+		console.error("loginWithPasskey.ts ERROR >>>", error);
+		return false;
+	}
 }
