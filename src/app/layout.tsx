@@ -36,10 +36,14 @@ export default async function RootLayout({
 	const encryptedSession = cookie.get(`${process.env.SESSION}`)?.value;
 	let session = null;
 	if (encryptedSession) {
-		session = jwt.verify(
-			encryptedSession,
-			`${process.env.SESSION_SECRET}`,
-		) as Session;
+		try {
+			session = jwt.verify(
+				encryptedSession,
+				`${process.env.SESSION_SECRET}`,
+			) as Session
+		} catch (_) {
+			session = "expired"
+		};
 	}
 
 	return (

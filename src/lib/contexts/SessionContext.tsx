@@ -12,6 +12,7 @@ import {
 } from "react";
 import { toast } from "sonner";
 import useSWR from "swr";
+import { TempValue } from "../utils/enums";
 
 const SessionContext = createContext({
 	session: null as Session,
@@ -23,27 +24,27 @@ export function SessionProvider({
 	session
 }: {
 	children: ReactNode;
-	session: Session;
+	session: Session | null | string;
 }) {
 	const [currentSession, setCurrentSession] = useState<Session>(null);
 	const redirectMessage = useSearchParams().get("redirect");
+	const isSessionExpired = typeof session === "string";
 	const { data } = useSWR(
-		!session ? "/api/auth/refresh" : null,
+		isSessionExpired ? "/api/auth/refresh" : null,
 		async (url) => {
-			if (!session || !session.exp) return null;
-			if (session.exp > Date.now() / 1000) return session;
 			try {
 				const refreshRes = await fetch(url, { method: "POST" });
 				if (!refreshRes.ok) {
-					if (refreshRes.status === 503) return session;
+					if (refreshRes.status === 503) return currentSession;
+
 					await logout();
 
 					return null;
 				}
 
-				return session;
+				return currentSession;
 			} catch (_) {
-				return session;
+				return currentSession;
 			}
 		}
 	);
@@ -52,13 +53,21 @@ export function SessionProvider({
 		if (!data) setCurrentSession(null);
 		else setCurrentSession(data);
 
-		if (session) {
-			localStorage.removeItem("CSRFToken");
+		if (session && typeof session !== "string") {
 			setCurrentSession(session);
-			toast.success("Login successful.", {
-				position: "bottom-right",
-				duration: 2000
-			});
+			
+			if (typeof window !== "undefined") {
+				sessionStorage.removeItem(TempValue.CSRFTkn);
+				const toastMsg = sessionStorage.getItem(TempValue.ToastMsg);
+				if (toastMsg) {
+					sessionStorage.removeItem(TempValue.ToastMsg);
+				}
+
+				toast.success(toastMsg, {
+					position: "bottom-right",
+					duration: 2000
+				});
+			}
 		}
 
 		if (redirectMessage) {

@@ -3,7 +3,7 @@ import type { Session } from "@/lib/types";
 import type { EncoreErrDto } from "@/lib/types/dto/CommonDto";
 import type { RefreshTokenDto } from "@/lib/types/dto/ResDto";
 import jwt from "jsonwebtoken";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST() {
@@ -19,7 +19,8 @@ export async function POST() {
 
 		const decodedSession = jwt.verify(
 			encryptedSession,
-			`${process.env.SESSION_SECRET}`
+			`${process.env.SESSION_SECRET}`,
+			{ ignoreExpiration: true }
 		) as Session;
 		if (!decodedSession) return redirectRes;
 
@@ -29,14 +30,18 @@ export async function POST() {
 				{ error: "Session token expired!" },
 				{ status: 419 }
 			);
-
 		const url = `${process.env.API_ROUTE}/auth/refresh`;
+		const header = await headers();
+		const userAgent = header.get("user-agent");
+		const xForwardedFor = header.get("x-forwarded-for");
 		const refreshResponse = await fetch(url, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
-				"X-Authorization": decodedSession.clientId,
-				"X-CSRF": csrf,
+				"User-Agent": `${userAgent}`,
+				"X-Authorization": `Bearer ${decodedSession.clientId}`,
+				"X-Semi-CSRF": csrf,
+				"X-Forwarded-For": `${xForwardedFor}`,
 				Origin: "http://localhost:3000"
 			}
 		});
@@ -49,7 +54,7 @@ export async function POST() {
 			csrf: authJson.data.csrf,
 			exp: authJson.data.exp
 		};
-		await setSessionCookie(refreshedSession);
+		await setSessionCookie(refreshedSession, true);
 
 		const response = NextResponse.json(
 			{ message: "Refresh successful." },
