@@ -1,20 +1,24 @@
 import getClientFetch from "@/lib/actions/client/getClientFetch";
 import postClientFetch from "@/lib/actions/client/postClientFetch";
+import loginWithAuthApp from "@/lib/actions/server/auth/loginWithAuthApp";
 import loginWithPasskey from "@/lib/actions/server/auth/loginWithPasskey";
 import type { EncoreErrorCode, SearchParams, SlateEditor } from "@/lib/types";
+import type { EncoreErrDto } from "@/lib/types/dto/CommonDto";
+import type { GenRegWebauthnDto } from "@/lib/types/dto/ResDto";
 import type { CustomElement } from "@/lib/types/slate";
 import { UrlSchema } from "@/lib/types/zodSchemas";
 import { EncoreHttpStatusMap, LIST_TYPES, VOIDS } from "@/lib/utils/constants";
 import {
-	ErrorType,
+	ErrorCode,
+	ErrorMsg,
 	HeadingSize,
 	WysiwygAlign,
 	WysiwygStyle,
-	WysiwygType,
+	WysiwygType
 } from "@/lib/utils/enums";
 import {
 	startAuthentication,
-	startRegistration,
+	startRegistration
 } from "@simplewebauthn/browser";
 import {
 	type BaseSelection,
@@ -23,10 +27,9 @@ import {
 	Node,
 	type Path,
 	Range,
-	Transforms,
+	Transforms
 } from "slate";
 import { toast } from "sonner";
-import loginWithAuthApp from "../actions/server/auth/loginWithAuthApp";
 
 export function addElement(editor: SlateEditor, element: CustomElement) {
 	const { selection } = editor;
@@ -39,7 +42,7 @@ export function addParagraph(editor: SlateEditor) {
 	addElement(editor, {
 		type: WysiwygType.Paragraph,
 		children: [{ text: "" }],
-		align: WysiwygAlign.Left,
+		align: WysiwygAlign.Left
 	});
 	// focusEditor(editor);
 }
@@ -47,7 +50,7 @@ export function addParagraph(editor: SlateEditor) {
 export function addCodeEditor(editor: SlateEditor) {
 	addElement(editor, {
 		type: WysiwygType.Code,
-		children: [{ text: "" }],
+		children: [{ text: "" }]
 	});
 	// focusEditor(editor);
 }
@@ -55,7 +58,7 @@ export function addCodeEditor(editor: SlateEditor) {
 export function addImageHolder(editor: SlateEditor) {
 	addElement(editor, {
 		type: WysiwygType.ImagePicker,
-		children: [{ text: "" }],
+		children: [{ text: "" }]
 	});
 	// focusEditor(editor);
 }
@@ -63,7 +66,7 @@ export function addImageHolder(editor: SlateEditor) {
 export function addDivider(editor: SlateEditor) {
 	addElement(editor, {
 		type: WysiwygType.Divider,
-		children: [{ text: "" }],
+		children: [{ text: "" }]
 	});
 	// focusEditor(editor);
 }
@@ -119,7 +122,7 @@ export function getElementHeadingSize(editor: SlateEditor) {
 
 export function getLinkElement(editor: SlateEditor) {
 	const linkElement = Editor.above(editor, {
-		match: (n) => (n as CustomElement).type === WysiwygStyle.Link,
+		match: (n) => (n as CustomElement).type === WysiwygStyle.Link
 	});
 	return linkElement;
 }
@@ -138,7 +141,7 @@ export function getErrorStatus(code: string): string {
 	const status = EncoreHttpStatusMap[normalizedCode];
 	if (status) return status;
 	console.warn(
-		`Encore error code "${code}" not recognized. Defaulting to 500.`,
+		`Encore error code "${code}" not recognized. Defaulting to 500.`
 	);
 
 	return "500 Internal Server Error (Unknown Encore Code)";
@@ -163,7 +166,7 @@ export function setCodeElement(editor: SlateEditor, value: string) {
 
 	Transforms.setNodes(editor, {
 		type: WysiwygType.Code,
-		code: value,
+		code: value
 	});
 }
 
@@ -171,14 +174,14 @@ export function setImageElement(
 	editor: SlateEditor,
 	link: string,
 	caption: string,
-	alt: string,
+	alt: string
 ) {
 	Transforms.setNodes(editor, {
 		type: WysiwygType.Image,
 		children: [{ text: "" }],
 		imageLink: link,
 		imageCaption: caption,
-		imageAlt: alt,
+		imageAlt: alt
 	});
 	// focusEditor(editor);
 }
@@ -207,7 +210,7 @@ export function removeElement(editor: SlateEditor) {
 export function toggleType(
 	editor: SlateEditor,
 	type: string,
-	headingSize?: string,
+	headingSize?: string
 ) {
 	const { selection } = editor;
 	if (!selection) return;
@@ -219,7 +222,7 @@ export function toggleType(
 			!Editor.isEditor(n) &&
 			Element.isElement(n) &&
 			LIST_TYPES.includes(n.type),
-		split: true,
+		split: true
 	});
 
 	if (type === WysiwygType.Heading) {
@@ -228,7 +231,7 @@ export function toggleType(
 		Transforms.setNodes(editor, {
 			type,
 			code: "",
-			path: selection.anchor.path,
+			path: selection.anchor.path
 		});
 	} else if (LIST_TYPES.includes(type)) {
 		Transforms.unsetNodes(editor, "align");
@@ -236,7 +239,7 @@ export function toggleType(
 		Transforms.wrapNodes(editor, {
 			type,
 			align: WysiwygAlign.Left,
-			children: [],
+			children: []
 		});
 	} else if (type === WysiwygType.Divider) {
 		Transforms.setNodes(editor, { type, path: selection.anchor.path });
@@ -279,7 +282,7 @@ export function toggleLink(editor: SlateEditor, linkUrl?: string) {
 
 	if (isLinkSelected(editor)) {
 		Transforms.unwrapNodes(editor, {
-			match: (n) => Element.isElement(n) && n.type === WysiwygStyle.Link,
+			match: (n) => Element.isElement(n) && n.type === WysiwygStyle.Link
 		});
 	} else {
 		const isSelectionCollapsed = Range.isCollapsed(selection);
@@ -288,7 +291,7 @@ export function toggleLink(editor: SlateEditor, linkUrl?: string) {
 			addElement(editor, {
 				type: WysiwygStyle.Link,
 				children: [{ text: "link" }],
-				url: linkUrl,
+				url: linkUrl
 			});
 		} else {
 			Transforms.wrapNodes(
@@ -296,9 +299,9 @@ export function toggleLink(editor: SlateEditor, linkUrl?: string) {
 				{
 					type: WysiwygStyle.Link,
 					children: [{ text: "" }],
-					url: linkUrl,
+					url: linkUrl
 				},
-				{ split: true, at: selection },
+				{ split: true, at: selection }
 			);
 		}
 	}
@@ -317,7 +320,7 @@ export function isLinkSelected(editor: SlateEditor) {
 
 	return (
 		Editor.above(editor, {
-			match: (n) => (n as CustomElement).type === WysiwygStyle.Link,
+			match: (n) => (n as CustomElement).type === WysiwygStyle.Link
 		}) != null
 	);
 }
@@ -370,25 +373,28 @@ export function getSlugFromPath(path: string) {
 
 export async function registerPasskey() {
 	try {
-		const resJson = await getClientFetch<any>("/auth/two-fa/webauthn/register");
+		const preUrl = "/auth/two-fa/webauthn/register";
+		const resJson = await getClientFetch<GenRegWebauthnDto>(
+			`${preUrl}/generate`
+		);
 
 		const attestationResponse = await startRegistration({
-			optionsJSON: resJson.data.options,
+			optionsJSON: resJson?.data.options
 		});
 
-		const resOk = await postClientFetch("/auth/two-fa/webauthn/register", {
-			options: attestationResponse,
+		const resOk = await postClientFetch(`${preUrl}/verify`, {
+			options: attestationResponse
 		});
 
 		if (resOk) {
 			toast.success("Your Passkey has been added.", {
 				position: "bottom-right",
-				duration: 2000,
+				duration: 2000
 			});
 		} else {
 			toast.error("Error occurred, please try again later.", {
 				position: "bottom-right",
-				duration: 2000,
+				duration: 2000
 			});
 		}
 
@@ -402,7 +408,7 @@ export async function registerPasskey() {
 				: "Server error please try again later!";
 		toast.error(errTitle, {
 			position: "bottom-right",
-			duration: 2000,
+			duration: 2000
 		});
 
 		return false;
@@ -418,19 +424,18 @@ export async function verifyPasskeyLogin(emailOrUsername: string) {
 				method: "POST",
 				credentials: "include",
 				headers: {
-					"Content-Type": "application/json",
+					"Content-Type": "application/json"
 				},
-				body: JSON.stringify({ emailOrUsername }),
-			},
+				body: JSON.stringify({ emailOrUsername })
+			}
 		);
-		if (!generateRes.ok) throw new Error("Generate webauthn login failed!");
-
 		const generateJson = await generateRes.json();
-		if (!generateJson.data.options)
-			throw new Error("Generate webauthn login failed!");
+		if (!generateRes.ok || !generateJson.data.options) {
+			return generateJson as EncoreErrDto;
+		}
 
 		const attestationResponse = await startAuthentication({
-			optionsJSON: generateJson.data.options,
+			optionsJSON: generateJson.data.options
 		});
 
 		const verifyRes = await fetch(
@@ -439,22 +444,26 @@ export async function verifyPasskeyLogin(emailOrUsername: string) {
 				method: "POST",
 				credentials: "include",
 				headers: {
-					"Content-Type": "application/json",
+					"Content-Type": "application/json"
 				},
-				body: JSON.stringify({ option: attestationResponse }),
-			},
+				body: JSON.stringify({ option: attestationResponse })
+			}
 		);
-		if (!verifyRes.ok) throw new Error("Verify webauthn login failed!");
+		if (!verifyRes.ok) return (await verifyRes.json()) as EncoreErrDto;
 
 		const response = await loginWithPasskey(
 			emailOrUsername,
-			attestationResponse.id,
+			attestationResponse.id
 		);
 
 		return response;
 	} catch (error) {
 		if (error instanceof Error && error.name === "NotAllowedError") {
-			return { status: "Forbidden", error: ErrorType.CANCELED_BY_USER };
+			return {
+				code: ErrorCode.CanceledByUser,
+				message: ErrorMsg.CanceledByUser,
+				details: error.cause
+			} as EncoreErrDto;
 		}
 		return false;
 	}
@@ -462,7 +471,7 @@ export async function verifyPasskeyLogin(emailOrUsername: string) {
 
 export async function verifyAuthAppLogin(
 	emailOrUsername: string,
-	token: string,
+	token: string
 ) {
 	try {
 		const response = await loginWithAuthApp(emailOrUsername, token);
