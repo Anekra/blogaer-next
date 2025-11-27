@@ -92,7 +92,7 @@ export type PostWithResIdDto = {
 	error?: string;
 };
 
-export type GenRegWebauthnDto {
+export type GenRegWebauthnDto = {
 	status: string;
 	data: {
 		options: PublicKeyCredentialCreationOptionsJSON;
