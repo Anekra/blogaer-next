@@ -69,7 +69,7 @@ export type AnyObj = { [key: string]: unknown };
 
 export type EncoreErrorCode =
 	| "ok"
-	| "cancelled"
+	| "canceled"
 	| "unknown"
 	| "invalid_argument"
 	| "deadline_exceeded"
