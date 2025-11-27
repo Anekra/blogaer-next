@@ -36,10 +36,9 @@ export default function SavedAccountCard({
 			if (isResLoginBoolean && resLogin) {
 				router.replace(redirectUrl || "/home");
 			} else {
-				const errMsg =
-					!isResLoginBoolean && "error" in resLogin
-						? resLogin?.error
-						: ErrorMsg.FetchFailedError;
+				const errMsg = !isResLoginBoolean
+					? resLogin?.message
+					: ErrorMsg.FetchFailedError;
 				if (errMsg === ErrorMsg.CanceledByUser) {
 					toast(errMsg, {
 						position: "bottom-right",
