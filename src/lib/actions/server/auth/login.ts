@@ -1,38 +1,34 @@
 "use server";
 
+import type { AuthDto, EncoreErrDto } from "@/lib/types/dto/CommonDto";
+import type { LoginFormSchema } from "@/lib/types/zodSchemas";
 import { headers } from "next/headers";
-import { z } from "zod";
-
-import { AuthDto } from "@/lib/types/dto/CommonDto";
-import { LoginFormSchema } from "@/lib/types/zodSchemas";
-
+import type { z } from "zod";
 import setSessionCookie from "./setSessionCookie";
 
 export default async function login(values: z.infer<typeof LoginFormSchema>) {
-  try {
-    const url = `${process.env.API_ROUTE}/auth/login`;
-    const userAgent = (await headers()).get("user-agent");
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "User-Agent": `${userAgent}`,
-        Origin: "http://localhost:3000"
-      },
-      body: JSON.stringify(values)
-    });
+	try {
+		const url = `${process.env.API_ROUTE}/auth/login`;
+		const userAgent = (await headers()).get("user-agent");
+		const response = await fetch(url, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"User-Agent": `${userAgent}`,
+				Origin: "http://localhost:3000"
+			},
+			body: JSON.stringify(values)
+		});
 
-    const resJson: AuthDto = await response.json();
+		const resJson = await response.json();
+		if (!response.ok) return resJson as EncoreErrDto;
 
-    console.log(resJson);
+		const authData = resJson as AuthDto;
+		await setSessionCookie(authData.data, true);
 
-    if (!response.ok) return resJson;
-
-    await setSessionCookie(resJson);
-
-    return true;
-  } catch (error) {
-    console.error("login.ts >>>", error);
-    return false;
-  }
+		return true;
+	} catch (error) {
+		console.error("login.ts >>>", error);
+		return false;
+	}
 }
