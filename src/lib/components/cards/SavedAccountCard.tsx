@@ -2,7 +2,7 @@ import checkTwoFA from "@/lib/actions/server/auth/checkTwoFA";
 import AuthAppVerifyDialog from "@/lib/components/dialogs/auth-app/AuthAppVerifyDialog";
 import SavedAccountDropdown from "@/lib/components/dropdowns/SavedAccountDropdown";
 import type { SavedAccountsDto } from "@/lib/types/dto/CommonDto";
-import { ErrorType } from "@/lib/utils/enums";
+import { ErrorMsg } from "@/lib/utils/enums";
 import { verifyPasskeyLogin } from "@/lib/utils/helper";
 import { UserIcon } from "lucide-react";
 import Image from "next/image";
@@ -39,8 +39,8 @@ export default function SavedAccountCard({
 				const errMsg =
 					!isResLoginBoolean && "error" in resLogin
 						? resLogin?.error
-						: ErrorType.FetchFailedError;
-				if (errMsg === ErrorType.CanceledByUser) {
+						: ErrorMsg.FetchFailedError;
+				if (errMsg === ErrorMsg.CanceledByUser) {
 					toast(errMsg, {
 						position: "bottom-right",
 						duration: 2000
