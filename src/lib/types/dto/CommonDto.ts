@@ -5,7 +5,7 @@ import type { PostDto, PostWithNoUserDto } from "./PostDto";
 export type EncoreErrDto = {
 	code: string;
 	message: string;
-	details?: string;
+	details?: unknown;
 };
 
 export type AuthDto = {
