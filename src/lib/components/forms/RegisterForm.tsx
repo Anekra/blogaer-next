@@ -7,12 +7,12 @@ import {
 	FormField,
 	FormItem,
 	FormLabel,
-	FormMessage,
+	FormMessage
 } from "@/lib/components/ui/form";
 import { Input } from "@/lib/components/ui/input";
 import { useLoading } from "@/lib/contexts/LoadingContext";
 import { RegisterFormSchema } from "@/lib/types/zodSchemas";
-import { ErrorType } from "@/lib/utils/enums";
+import { ErrorMsg, TempInfo, TempKey } from "@/lib/utils/enums";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -22,6 +22,8 @@ import { toast } from "sonner";
 import type * as z from "zod";
 
 export default function RegisterForm() {
+	// to be continued to delete user & token data
+	// and to test if the toast and the redirects are working properly
 	const { setLoading } = useLoading();
 	const [showPassword, setShowPassword] = useState(false);
 	const router = useRouter();
@@ -30,9 +32,9 @@ export default function RegisterForm() {
 		defaultValues: {
 			username: "",
 			email: "",
-			password: "",
+			password: ""
 		},
-		mode: "onChange",
+		mode: "onChange"
 	});
 	const handleRegister = async (values: z.infer<typeof RegisterFormSchema>) => {
 		setLoading(true);
@@ -40,24 +42,31 @@ export default function RegisterForm() {
 			setLoading(false);
 			toast.error("Request timeout!", {
 				position: "bottom-right",
-				duration: 1500,
+				duration: 1500
 			});
-		}, 10000);
-		const response = await register(values);
-		if (!response || typeof response !== "boolean") {
+		}, 20000);
+
+		const res = await register(values);
+
+		const isResBoolean = typeof res === "boolean";
+		if (!res || !isResBoolean) {
 			setLoading(false);
 			clearTimeout(timeout);
-			const errorMessage =
-				typeof response !== "boolean"
-					? response?.message
-					: ErrorType.FETCH_FAILED_ERROR;
-			toast.error(`${errorMessage}`, {
+			const errMsg = !isResBoolean ? res?.message : ErrorMsg.FetchFailedError;
+			toast.error(`${errMsg}`, {
 				position: "bottom-right",
-				duration: 1500,
+				duration: 1500
 			});
 		} else {
 			setLoading(false);
 			clearTimeout(timeout);
+			sessionStorage.setItem(
+				TempKey.ToastMsg,
+				JSON.stringify({
+					type: TempKey.VerifyEmailSentToastMsg,
+					msg: TempInfo.VerifyEmailSent
+				})
+			);
 			router.replace(`/auth/email/verify/${values.username}`);
 		}
 	};
@@ -125,7 +134,7 @@ export default function RegisterForm() {
 									{...field}
 								/>
 							</FormControl>
-							<FormMessage className="w-fit rounded bg-background/60 px-1">
+							<FormMessage className="w-fit rounded bg-background/60 px-1 text-red-500">
 								{fieldState.error?.message}
 							</FormMessage>
 						</FormItem>
@@ -158,14 +167,14 @@ export default function RegisterForm() {
 									/>
 									<button
 										className="absolute right-2 text-muted-foreground outline-none hover:text-foreground"
-                    type="button"
+										type="button"
 										onMouseUp={() => setShowPassword(!showPassword)}
 									>
 										{showPassword ? <EyeIcon /> : <EyeOffIcon />}
 									</button>
 								</div>
 							</FormControl>
-							<FormMessage className="w-fit rounded bg-background/60 px-1">
+							<FormMessage className="w-fit rounded bg-background/60 px-1 text-red-500">
 								{fieldState.error?.message}
 							</FormMessage>
 						</FormItem>
