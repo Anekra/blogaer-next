@@ -2,43 +2,56 @@
 
 import type { Session } from "@/lib/types";
 import jwt from "jsonwebtoken";
+import type { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { cookies, headers } from "next/headers";
+import { redirect } from "next/navigation";
+
+async function deleteAllCookies(cookie: ReadonlyRequestCookies) {
+	const allCookies = cookie.getAll();
+	allCookies.forEach((item) => {
+		cookie.delete(item.name);
+	});
+}
 
 export default async function logout() {
 	const cookie = await cookies();
-	const sessionCookie = `${process.env.SESSION}`;
 	const encryptedSession = cookie.get(`${process.env.SESSION}`)?.value;
-	if (!encryptedSession) {
-		cookie.delete(sessionCookie);
-		return;
+	const csrf = cookie.get(`${process.env.CSRF}`)?.value;
+	if (!encryptedSession || !csrf) {
+		await deleteAllCookies(cookie);
+		return redirect("/login");
 	}
+
 	const decodedSession = jwt.verify(
 		encryptedSession,
 		`${process.env.SESSION_SECRET}`,
 		{ ignoreExpiration: true }
 	) as Session;
+
 	if (!decodedSession) {
-		cookie.delete(sessionCookie);
-		return;
+		await deleteAllCookies(cookie);
+		return redirect("/login");
 	}
+
 	const url = `${process.env.API_ROUTE}/auth/logout`;
 	const header = await headers();
 	const userAgent = header.get("user-agent");
-	const xForwardedFor = header.get("x-forwarded-for");
-	const csrf = cookie.get(`${process.env.CSRF}`)?.value;
-	if (!csrf) {
-		cookie.delete(sessionCookie);
-		return;
+
+	try {
+		await fetch(url, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"User-Agent": `${userAgent}`,
+				"X-Authorization": `Bearer ${decodedSession.clientId}`,
+				"X-Semi-CSRF": csrf,
+				Origin: "http://localhost:3000"
+			}
+		});
+	} catch (err) {
+		console.error("LOGOUT logout >>", err);
+	} finally {
+		await deleteAllCookies(cookie);
+		redirect("/");
 	}
-	await fetch(url, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-			"User-Agent": `${userAgent}`,
-			"X-Authorization": `Bearer ${decodedSession.clientId}`,
-			"X-Semi-CSRF": csrf,
-			"X-Forwarded-For": `${xForwardedFor}`,
-			Origin: "http://localhost:3000"
-		}
-	});
 }
