@@ -10,11 +10,10 @@ export default async function register(
 	values: z.infer<typeof RegisterFormSchema>
 ) {
 	try {
-		const url: string = `${process.env.API_ROUTE}/auth/register`;
-		const header = await headers();;
+		const header = await headers();
 		const userAgent = header.get("user-agent");
 		const xForwardedFor = header.get("x-forwarded-for");
-		const response = await fetch(url, {
+		const response = await fetch(`${process.env.API_ROUTE}/auth/register`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
