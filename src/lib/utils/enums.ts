@@ -47,7 +47,8 @@ export enum ErrorCode {
 export enum ErrorMsg {
 	FetchFailedError = "Failed to fetch!",
 	UnexpectedError = "An unexpected error occurred!",
-	CanceledByUser = "Login canceled by user!"
+	CanceledByUser = "Login canceled by user!",
+	SessionExpired = "Session expired!"
 }
 
 export enum RedirectParam {
@@ -64,13 +65,21 @@ export enum EmailSubject {
 
 export enum TempInfo {
 	LoginSuccess = "Login successful.",
+	LogoutSuccess = "Logout successful.",
+	SessionExpired = "Your session has expired! please login again.",
 	EmailSent = "Email has been sent, please check your email.",
 	VerifyEmailSent = "Verification email has been sent, please check your email.",
 	VerifyEmailSuccess = "Your email has been successfully verified.",
 	VerifyEmailFailed = "Your email verification has failed!"
 }
 
-export enum TempValue {
+export enum TempKey {
 	ToastMsg = "toast-message",
-	CSRFTkn = "csrf-token"
+	VerifyEmailSentToastMsg = "verify-email-sent-message",
+	EmailVerifiedToastMsg = "email-verified-message",
+	LoginSuccessToastMsg = "login-success-message",
+	LogoutSuccessToastMsg = "logout-success-message",
+	SessionExpiredToastMsg = "session-expired-message",
+	CSRFTkn = "csrf-token",
+	Sidebar = "sidebar"
 }
