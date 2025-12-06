@@ -52,6 +52,7 @@ export async function POST() {
 			...decodedSession,
 			clientId: authJson.data.clientId,
 			csrf: authJson.data.csrf,
+			isVerified: authJson.data.isVerified,
 			exp: authJson.data.exp
 		};
 		await setSessionCookie(refreshedSession, true);
