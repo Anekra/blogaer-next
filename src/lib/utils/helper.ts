@@ -12,6 +12,8 @@ import {
 	ErrorCode,
 	ErrorMsg,
 	HeadingSize,
+	TempInfo,
+	TempKey,
 	WysiwygAlign,
 	WysiwygStyle,
 	WysiwygType
@@ -71,7 +73,7 @@ export function addDivider(editor: SlateEditor) {
 	// focusEditor(editor);
 }
 
-export function displayError(error: Error, res: object) {
+export function displayError(error: Error, res?: object) {
 	let errorMsg = "An unexpected error occurred. Please try again later.";
 
 	if (error) {
@@ -482,4 +484,45 @@ export async function verifyAuthAppLogin(
 
 		return false;
 	}
+}
+
+export function manageToast(
+	sessionStorage: Storage,
+	localStorage: Storage,
+	redirectMessage: string | null,
+	history: History,
+	currentPath?: string
+) {
+	if (redirectMessage) {
+		toast(redirectMessage, {
+			position: "bottom-right",
+			duration: 2000
+		});
+		history.replaceState(null, "", currentPath ?? "");
+	}
+
+	let toastMsg = null;
+	const sessionToast = sessionStorage.getItem(TempKey.ToastMsg);
+	if (sessionToast) toastMsg = sessionToast;
+	else toastMsg = localStorage.getItem(TempKey.ToastMsg);
+
+	if (!toastMsg) return;
+
+	const toastData = JSON.parse(toastMsg);
+	toast.success(toastData.msg, {
+		position: "bottom-right",
+		duration: 2000
+	});
+	
+	if (toastData.type === TempKey.VerifyEmailSentToastMsg) {
+		localStorage.setItem(
+			TempKey.ToastMsg,
+			JSON.stringify({
+				type: TempKey.EmailVerifiedToastMsg,
+				msg: TempInfo.VerifyEmailSuccess
+			})
+		);
+	}
+	localStorage.removeItem(TempKey.ToastMsg);
+	sessionStorage.removeItem(TempKey.ToastMsg);
 }
