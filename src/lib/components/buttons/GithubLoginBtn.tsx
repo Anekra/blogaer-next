@@ -1,7 +1,7 @@
 "use client";
 import GithubIcon from "@/lib/components/icons/GithubIcon";
 import { useLoading } from "@/lib/contexts/LoadingContext";
-import { TempValue } from "@/lib/utils/enums";
+import { TempKey } from "@/lib/utils/enums";
 import { newUrl } from "@/lib/utils/helper";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
@@ -12,11 +12,11 @@ export default function GithubLoginBtn() {
 	const redirectUrl = useSearchParams().get("request_url");
 	const handleGithubLogin = async () => {
 		const state = crypto.randomUUID();
-		sessionStorage.setItem(TempValue.CSRFTkn, state);
+		sessionStorage.setItem(TempKey.CSRFTkn, state);
 		const searchParams = redirectUrl
 			? [
 					{ param: "state", value: state },
-					{ param: "request_url", value: redirectUrl },
+					{ param: "request_url", value: redirectUrl }
 				]
 			: [{ param: "state", value: state }];
 		const url = newUrl("/api/auth/callback/github", searchParams);
@@ -25,7 +25,7 @@ export default function GithubLoginBtn() {
 		const resJson = await res.json();
 		const params = new URLSearchParams(resJson.url);
 		const paramState = params.get("state");
-		const localState = sessionStorage.getItem(TempValue.CSRFTkn);
+		const localState = sessionStorage.getItem(TempKey.CSRFTkn);
 
 		if (res.status === 302 && paramState === localState) {
 			router.replace(resJson.url);
@@ -33,7 +33,7 @@ export default function GithubLoginBtn() {
 			setLoading(false);
 			toast.error("Request denied, CSRF detected!", {
 				position: "bottom-right",
-				duration: 2000,
+				duration: 2000
 			});
 		}
 	};
