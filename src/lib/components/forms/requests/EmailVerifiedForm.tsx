@@ -3,25 +3,27 @@
 import userPatch from "@/lib/actions/server/userPatch";
 import { Input } from "@/lib/components/ui/input";
 import { Label } from "@/lib/components/ui/label";
-import { EmailSubject, TempInfo, TempValue } from "@/lib/utils/enums";
-import { useRouter, useSearchParams } from "next/navigation";
-import { type FormEvent, useEffect, useRef } from "react";
+import { TempInfo, TempKey } from "@/lib/utils/enums";
+import { useRouter } from "next/navigation";
+import { type FormEvent, useRef } from "react";
 import { toast } from "sonner";
 
 export default function EmailVerifiedForm() {
 	const router = useRouter();
 	const nameRef = useRef<HTMLInputElement>(null);
-	const params = useSearchParams();
-	const request = params.get("request");
-	const verified = params.get("verified");
-	const message = params.get("message");
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const name = nameRef.current?.value || "";
 		const response = await userPatch({ name });
 		if (response.message) {
-			sessionStorage.setItem(TempValue.ToastMsg, TempInfo.LoginSuccess);
+			sessionStorage.setItem(
+				TempKey.ToastMsg,
+				JSON.stringify({
+					type: TempKey.LoginSuccessToastMsg,
+					msg: TempInfo.LoginSuccess
+				})
+			);
 			router.replace("/home");
 		} else {
 			toast.error(response.error, {
@@ -30,27 +32,6 @@ export default function EmailVerifiedForm() {
 			});
 		}
 	};
-
-	useEffect(() => {
-		if (typeof window !== "undefined") {
-			sessionStorage.setItem(TempValue.ToastMsg, TempInfo.VerifyEmailSuccess);
-			if (verified === "true") {
-				toast.success(TempInfo.VerifyEmailSuccess, {
-					position: "bottom-right",
-					duration: 1500
-				});
-				sessionStorage.removeItem(TempValue.ToastMsg);
-			}
-		}
-	}, [verified]);
-
-	if (request !== EmailSubject.VerifyEmail) {
-		router.replace("/");
-	}
-
-	if (!verified) {
-		return <p>{message}</p>;
-	}
 
 	return (
 		<form method="post" className="flex flex-col gap-6" onSubmit={handleSubmit}>
