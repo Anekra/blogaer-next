@@ -8,13 +8,15 @@ import setSessionCookie from "./setSessionCookie";
 
 export default async function login(values: z.infer<typeof LoginFormSchema>) {
 	try {
-		const url = `${process.env.API_ROUTE}/auth/login`;
-		const userAgent = (await headers()).get("user-agent");
-		const response = await fetch(url, {
+		const header = await headers();;
+		const userAgent = header.get("user-agent");
+		const xForwardedFor = header.get("x-forwarded-for");
+		const response = await fetch(`${process.env.API_ROUTE}/auth/login`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 				"User-Agent": `${userAgent}`,
+				"X-Forwarded-For": `${xForwardedFor}`,
 				Origin: "http://localhost:3000"
 			},
 			body: JSON.stringify(values)
