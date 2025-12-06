@@ -14,7 +14,7 @@ import { Input } from "@/lib/components/ui/input";
 import { useLoading } from "@/lib/contexts/LoadingContext";
 import type { EncoreErrDto } from "@/lib/types/dto/CommonDto";
 import { LoginFormSchema } from "@/lib/types/zodSchemas";
-import { ErrorMsg } from "@/lib/utils/enums";
+import { ErrorMsg, TempInfo, TempKey } from "@/lib/utils/enums";
 import { verifyPasskeyLogin } from "@/lib/utils/helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
@@ -59,7 +59,7 @@ export default function LoginForm() {
 				duration: 1500
 			});
 		} else if (typeof res !== "boolean" && res) {
-			if (res?.message) {
+			if (!res?.code) {
 				form.setError(
 					res.message === "Unauthorized" ? "password" : "emailOrUsername",
 					{
@@ -67,8 +67,20 @@ export default function LoginForm() {
 						message: res.message
 					}
 				);
+			} else {
+				toast.error(res.message, {
+					position: "bottom-right",
+					duration: 1500
+				});
 			}
 		} else {
+			sessionStorage.setItem(
+				TempKey.ToastMsg,
+				JSON.stringify({
+					type: TempKey.LoginSuccessToastMsg,
+					msg: TempInfo.LoginSuccess
+				})
+			);
 			router.replace(redirectUrl || "/home");
 		}
 		setLoading(false);
