@@ -10,6 +10,7 @@ export type Session = {
 	email: string;
 	role: string;
 	name: string;
+	isVerified: boolean;
 	desc?: string;
 	img?: string;
 	exp?: number;
@@ -38,6 +39,7 @@ export type RefreshToken = {
 	username: string;
 	clientId: string;
 	csrf: string;
+	isVerified: boolean;
 	exp: number;
 };
 
