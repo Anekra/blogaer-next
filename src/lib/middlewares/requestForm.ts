@@ -2,18 +2,12 @@ import { RedirectParam } from "@/lib/utils/enums";
 import { newUrl } from "@/lib/utils/helper";
 import { type NextRequest, NextResponse } from "next/server";
 
-export async function requestForm(req: NextRequest) {
-	const clientId = req.headers.get("x-auth-client-id");
-	if (!clientId) {
-		const searchParams = [
-			{ param: "redirect", value: "Login required." },
-			{ param: "request_url", value: `${req.nextUrl.pathname}` }
-		];
-		const url = newUrl("/login", searchParams);
-		return NextResponse.redirect(url, 301);
-	}
-
+export async function requestForm(
+	req: NextRequest,
+	authorizedData: string[]
+) {
 	const currentPath = req.nextUrl.pathname;
+	const [clientId, csrf] = authorizedData;
 	const path = currentPath.includes("update")
 		? "/settings/account"
 		: "/settings/security";
@@ -30,13 +24,16 @@ export async function requestForm(req: NextRequest) {
 
 	const urlUsername = req.nextUrl.searchParams.get("username");
 	try {
+		const userAgent = req.headers.get("user-agent");
 		const checkUsernameRes = await fetch(
 			`${process.env.NEXT_PUBLIC_API_ROUTE}/auth/check-username`,
 			{
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
-					"X-Authorization": clientId,
+					"User-Agent": `${userAgent}`,
+					"X-Authorization": `Bearer ${clientId}`,
+					"X-Semi-CSRF": csrf,
 					Origin: "http://localhost:3000"
 				}
 			}
