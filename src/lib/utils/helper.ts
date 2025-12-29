@@ -22,6 +22,7 @@ import {
 	startAuthentication,
 	startRegistration
 } from "@simplewebauthn/browser";
+import type { ReadonlyURLSearchParams } from "next/navigation";
 import {
 	type BaseSelection,
 	Editor,
@@ -354,6 +355,12 @@ export function isUrl(url: string) {
 	}
 }
 
+export function isArrayOfStrings(value: unknown) {
+	return (
+		Array.isArray(value) && value.every((item) => typeof item === "string")
+	);
+}
+
 export function convertFileToBase64(file: File) {
 	return new Promise<string>((resolve, reject) => {
 		const fileReader = new FileReader();
@@ -489,16 +496,24 @@ export async function verifyAuthAppLogin(
 export function manageToast(
 	sessionStorage: Storage,
 	localStorage: Storage,
-	redirectMessage: string | null,
 	history: History,
-	currentPath?: string
+	currentSearchParams: ReadonlyURLSearchParams,
+	currentPath: string
 ) {
-	if (redirectMessage) {
-		toast(redirectMessage, {
+	const searchParams = new URLSearchParams(currentSearchParams.toString());
+	const redirectMsg = searchParams.get("redirect");
+	if (redirectMsg) {
+		toast.warning(redirectMsg, {
 			position: "bottom-right",
 			duration: 2000
 		});
-		history.replaceState(null, "", currentPath ?? "");
+		searchParams.delete("redirect");
+		const searchParamsString = searchParams.toString();
+		history.replaceState(
+			null,
+			"",
+			searchParamsString ? `${currentPath}?${searchParamsString}` : currentPath
+		);
 	}
 
 	let toastMsg = null;
@@ -513,7 +528,7 @@ export function manageToast(
 		position: "bottom-right",
 		duration: 2000
 	});
-	
+
 	if (toastData.type === TempKey.VerifyEmailSentToastMsg) {
 		localStorage.setItem(
 			TempKey.ToastMsg,

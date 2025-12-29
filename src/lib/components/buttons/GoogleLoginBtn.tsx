@@ -1,60 +1,59 @@
 "use client";
+
+import { getGoogleOauthCode as getGoogleOauthUrl } from "@/lib/actions/server/oauth/get-google-oauth-url";
 import GoogleIcon from "@/lib/components/icons/GoogleIcon";
 import { useLoading } from "@/lib/contexts/LoadingContext";
-import { TempKey } from "@/lib/utils/enums";
-import { newUrl } from "@/lib/utils/helper";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import type React from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export default function GoogleLoginBtn() {
 	const { isLoading, setLoading } = useLoading();
-	const router = useRouter();
-	const redirectUrl = useSearchParams().get("request_url");
-	const handleGoogleLogin = async () => {
-		const state = crypto.randomUUID();
-		sessionStorage.setItem(TempKey.CSRFTkn, state);
-		const searchParams = redirectUrl
-			? [
-					{ param: "state", value: state },
-					{ param: "request_url", value: redirectUrl }
-				]
-			: [{ param: "state", value: state }];
-		const url = newUrl("/api/auth/callback/google", searchParams);
-		setLoading(true);
-		const res = await fetch(url);
-		const resJson = await res.json();
-		const params = new URLSearchParams(resJson.url);
-		const paramState = params.get("state");
-		const localState = sessionStorage.getItem(TempKey.CSRFTkn);
+	const currentSearchParams = useSearchParams();
+	const [errorParam, setErrorParam] = useState<string | null>(null);
+	const redirectUrl = currentSearchParams.get("request_url");
+	const handleGoogleLogin = async (e: React.MouseEvent) => {
+		e.preventDefault();
 
-		if (res.status === 302 && paramState === localState) {
-			router.replace(resJson.url);
-		} else if (paramState !== localState) {
+		if (isLoading) return;
+		setLoading(true);
+
+		try {
+			const state = crypto.randomUUID();
+			const authUrlString = await getGoogleOauthUrl(state, redirectUrl);
+
+			if (authUrlString) window.location.href = authUrlString;
+		} catch (_) {
 			setLoading(false);
-			toast.error("Request denied, CSRF detected!", {
-				position: "bottom-right",
-				duration: 2000
-			});
-		} else if (res.status === 408) {
-			setLoading(false);
-			toast.error("Request timeout!", {
-				position: "bottom-right",
-				duration: 2000
-			});
-		} else {
-			setLoading(false);
-			toast.error("Server error, please try again later!", {
-				position: "bottom-right",
-				duration: 2000
-			});
+			toast.error("Failed to initialize Google login");
 		}
 	};
 
+	useEffect(() => {
+		const searchParams = new URLSearchParams(currentSearchParams.toString());
+		setErrorParam(searchParams.get("error"));
+		if (errorParam) {
+			toast.error(errorParam, {
+				position: "bottom-right",
+				duration: 2000
+			});
+			searchParams.delete("error");
+			const searchParamsString = searchParams.toString();
+			const currentPath = window.location.pathname;
+			window.history.replaceState(
+			null,
+			"",
+			searchParamsString ? `${currentPath}?${searchParamsString}` : currentPath
+		);
+		}
+	}, [currentSearchParams, errorParam]);
+
 	return (
 		<button
-			onMouseUp={handleGoogleLogin}
 			className="text-4xl text-primary-foreground hover:brightness-125"
 			type="button"
+			onClick={handleGoogleLogin}
 			disabled={isLoading}
 		>
 			<GoogleIcon />
