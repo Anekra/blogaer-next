@@ -39,13 +39,14 @@ export default function GithubLoginBtn() {
 	};
 
 	return (
-		<button
-			onMouseUp={handleGithubLogin}
-			className="text-4xl text-primary-foreground hover:brightness-125"
-			type="button"
-			disabled={isLoading}
-		>
-			<GithubIcon />
-		</button>
+		<form method="POST" onSubmit={handleGithubLogin}>
+			<button
+				className="text-4xl text-primary-foreground hover:brightness-125"
+				type="submit"
+				disabled={isLoading}
+			>
+				<GithubIcon />
+			</button>
+		</form>
 	);
 }
