@@ -29,7 +29,7 @@ export function SessionProvider({
 	isExpired: boolean;
 }) {
 	const [currentSession, setCurrentSession] = useState<Session>(session);
-	const redirectMessage = useSearchParams().get("redirect");
+	const currentSearchParams = useSearchParams();
 	const currentPath = usePathname();
 	const { data: sessionData } = useSWR(
 		isExpired ? "/api/auth/refresh" : null,
@@ -69,13 +69,13 @@ export function SessionProvider({
 			manageToast(
 				sessionStorage,
 				localStorage,
-				redirectMessage,
 				window.history,
+				currentSearchParams,
 				currentPath
 			);
 			if (!session) localStorage.removeItem(TempKey.Sidebar);
 		}
-	}, [sessionData, session, redirectMessage, currentPath]);
+	}, [sessionData, session, currentSearchParams, currentPath]);
 
 	return (
 		<SessionContext.Provider

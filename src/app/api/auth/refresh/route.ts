@@ -2,7 +2,7 @@ import setSessionCookie from "@/lib/actions/server/auth/setSessionCookie";
 import type { Session } from "@/lib/types";
 import type { EncoreErrDto } from "@/lib/types/dto/CommonDto";
 import type { RefreshTokenDto } from "@/lib/types/dto/ResDto";
-import jwt from "jsonwebtoken";
+import jwt, { type JwtPayload } from "jsonwebtoken";
 import { cookies, headers } from "next/headers";
 import { NextResponse } from "next/server";
 
@@ -13,15 +13,14 @@ export async function POST() {
 			{ status: 419 }
 		);
 		const cookie = await cookies();
-		const sessionCookie = `${process.env.SESSION}`;
-		const encryptedSession = cookie.get(sessionCookie)?.value;
+		const encryptedSession = cookie.get(`${process.env.SESSION}`)?.value;
 		if (!encryptedSession) return redirectRes;
 
 		const decodedSession = jwt.verify(
 			encryptedSession,
 			`${process.env.SESSION_SECRET}`,
 			{ ignoreExpiration: true }
-		) as Session;
+		) as Session & JwtPayload;
 		if (!decodedSession) return redirectRes;
 
 		const csrf = cookie.get(`${process.env.CSRF}`)?.value;

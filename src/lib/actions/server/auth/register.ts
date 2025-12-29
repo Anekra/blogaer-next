@@ -1,10 +1,10 @@
 "use server";
 
+import setSessionCookie from "@/lib/actions/server/auth/setSessionCookie";
 import type { AuthDto, EncoreErrDto } from "@/lib/types/dto/CommonDto";
 import type { RegisterFormSchema } from "@/lib/types/zodSchemas";
 import { headers } from "next/headers";
 import type { z } from "zod";
-import setSessionCookie from "./setSessionCookie";
 
 export default async function register(
 	values: z.infer<typeof RegisterFormSchema>

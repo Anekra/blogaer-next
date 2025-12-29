@@ -18,12 +18,12 @@ export default async function userPatch(
 			return redirect("/login?redirect=Login required!");
 		}
 
-		const session = jwt.verify(
+		const decodedSession = jwt.verify(
 			encryptedSession,
 			`${process.env.SESSION_SECRET}`,
 			{ ignoreExpiration: true }
 		) as Session & JwtPayload;
-		if (!session) return redirect("/login?redirect=Login required!");
+		if (!decodedSession) return redirect("/login?redirect=Login required!");
 
 		const userAgent = (await headers()).get("user-agent");
 		const res = await fetch(`${process.env.API_ROUTE}${path}`, {
@@ -31,7 +31,7 @@ export default async function userPatch(
 			credentials: "include",
 			headers: {
 				"Content-Type": "application/json",
-				Authorization: `Bearer ${session.clientId}`,
+				Authorization: `Bearer ${decodedSession.clientId}`,
 				"User-Agent": `${userAgent}`,
 				"X-CSRF": `${csrf}`,
 				Origin: "http://localhost:3000"
@@ -48,7 +48,7 @@ export default async function userPatch(
 			};
 		}
 
-		const patchedData = { ...session, ...objValue, csrf };
+		const patchedData = { ...decodedSession, ...objValue, csrf };
 		await setSessionCookie(patchedData);
 
 		return { message: "User data updated successfully." };
